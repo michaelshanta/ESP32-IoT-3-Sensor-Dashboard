@@ -39,6 +39,7 @@ void mySubCallBackHandler (char *topicName, int payloadLen, char *payLoad)
 }
 
 void setup() {
+    delayTime = 1000;
     Serial.begin(115200);
     manager.setAPStaticIPConfig(IPAddress(10,0,1,1), IPAddress(10,0,1,1), IPAddress(255,255,255,0));
 
@@ -47,35 +48,11 @@ void setup() {
     WiFi.mode(WIFI_AP_STA);
     WiFi.disconnect();
     delay(100);
-    Serial.println("WiFi to station mode and disconnect from an AP if it was previously connected");
-
-    Serial.println("scan start");
-    // WiFi.scanNetworks will return the number of networks found
-    int n = WiFi.scanNetworks();
-    Serial.println("scan done");
-    if (n == 0) {
-        Serial.println("no networks found");
-    } else {
-        Serial.print(n);
-        Serial.println(" networks found");
-        for (int i = 0; i < n; ++i) {
-            // Print SSID and RSSI for each network found
-            Serial.print(i + 1);
-            Serial.print(": ");
-            Serial.print(WiFi.SSID(i));
-            Serial.print(" (");
-            Serial.print(WiFi.RSSI(i));
-            Serial.print(")");
-            Serial.println((WiFi.encryptionType(i) == WIFI_AUTH_OPEN)?" ":"*");
-            delay(10);
-        }
-    }
-    Serial.println("");
     
-    manager.startConfigPortal();
-    delayTime = 1000;
+    manager.startConfigPortal("Electronic Nose Setup");
+    
 
-   delay(2000);
+    delay(delayTime);
 
     if(WiFi.status() == WL_CONNECTED) {
         // Connect to AWS IoT and Subscribe to topic
