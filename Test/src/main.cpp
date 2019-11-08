@@ -18,7 +18,7 @@ const size_t capacity = JSON_OBJECT_SIZE(7);
 
 char HOST_ADDRESS[]="al98lr4rrmy3s-ats.iot.us-east-1.amazonaws.com";
 char CLIENT_ID[] = "client id";
-char TOPIC_NAME[] = "$aws/things/Electronic-Nose/Test2";
+char TOPIC_NAME[] = "$aws/things/Electronic-Nose/sensor-data";
 unsigned long delayTime;
 
 int status = WL_IDLE_STATUS;
@@ -43,7 +43,36 @@ void setup() {
     manager.setAPStaticIPConfig(IPAddress(10,0,1,1), IPAddress(10,0,1,1), IPAddress(255,255,255,0));
 
     // Connect to WiFi using the manager
-    manager.autoConnect("Electronic Nose");
+        // Set WiFi to station mode and disconnect from an AP if it was previously connected
+    WiFi.mode(WIFI_AP_STA);
+    WiFi.disconnect();
+    delay(100);
+    Serial.println("WiFi to station mode and disconnect from an AP if it was previously connected");
+
+    Serial.println("scan start");
+    // WiFi.scanNetworks will return the number of networks found
+    int n = WiFi.scanNetworks();
+    Serial.println("scan done");
+    if (n == 0) {
+        Serial.println("no networks found");
+    } else {
+        Serial.print(n);
+        Serial.println(" networks found");
+        for (int i = 0; i < n; ++i) {
+            // Print SSID and RSSI for each network found
+            Serial.print(i + 1);
+            Serial.print(": ");
+            Serial.print(WiFi.SSID(i));
+            Serial.print(" (");
+            Serial.print(WiFi.RSSI(i));
+            Serial.print(")");
+            Serial.println((WiFi.encryptionType(i) == WIFI_AUTH_OPEN)?" ":"*");
+            delay(10);
+        }
+    }
+    Serial.println("");
+    
+    manager.startConfigPortal();
     delayTime = 1000;
 
    delay(2000);
