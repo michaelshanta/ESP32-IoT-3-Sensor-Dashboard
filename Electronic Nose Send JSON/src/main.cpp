@@ -58,7 +58,7 @@ void setup() {
         // Connect to AWS IoT and Subscribe to topic
         Serial.println("Connected to WiFi succesfully");
         if(eNose.connect(HOST_ADDRESS, CLIENT_ID) == 0) {
-                Serial.println("Connected to AWS");
+                Serial.println("Connected to AWS succesfully");
                 delay(delayTime);
 
                 if(0==eNose.subscribe(TOPIC_NAME, mySubCallBackHandler)) {
